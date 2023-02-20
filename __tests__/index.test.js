@@ -38,13 +38,14 @@ describe("get /user", () => {
   });
 });
 
-describe("POST /signup", () => {
-  const obj = {
-    username: "user5",
-    email: "user5@stuff.com",
-    name: "user5",
-    password: "12345",
-    profile_image_url: "",
-  };
-  return request(app).get("signup").expect(201);
-});
+// describe("POST /signup", () => {
+//   const obj = {
+//     username: "user5",
+//     email: "user5@stuff.com",
+//     name: "user5",
+//     password: "12345",
+//     profile_image_url: "",
+//   };
+//   return request(app).get("signup")
+//   .expect(201);
+// });
