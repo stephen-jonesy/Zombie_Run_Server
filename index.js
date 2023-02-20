@@ -15,7 +15,9 @@ const bodyParser = require("body-parser");
 const UserModel = require("./models/user");
 
 dotenv.config({ path: "./config/config.env" });
-connectDB();
+if (!process.env.NODE_ENV) {
+  connectDB();
+}
 
 require("./auth/auth");
 
@@ -38,5 +40,9 @@ app.use(function (err, req, res, next) {
   res.json({ error: err });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, console.log(`Server running on ${PORT}`));
+if (!process.env.NODE_ENV) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, console.log(`Server running on ${PORT}`));
+}
+
+module.exports = app;
