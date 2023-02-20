@@ -3,7 +3,12 @@ const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const { findCustomers, addCustomers } = require("./controllers");
+const {
+  findCustomers,
+  addCustomers,
+  findUsers,
+  addUser,
+} = require("./controllers");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 
@@ -19,7 +24,10 @@ const secureRoute = require("./routes/secure-routes");
 
 const app = express();
 app.use(express.json());
-findCustomers();
+
+findUsers();
+addUser();
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/", routes);
