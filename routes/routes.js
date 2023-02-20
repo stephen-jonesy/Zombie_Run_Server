@@ -1,28 +1,19 @@
 const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const { addUser } = require("../controllers");
 
 const router = express.Router();
 
-router.post(
-  "/signup",
-  passport.authenticate("signup", { session: false }),
-  async (req, res, next) => {
-    console.log("hello");
-    res.json({
-      message: "Signup successful",
-      user: req.user,
-    });
-  }
-);
+router.post("/signup", addUser);
 
 router.post("/login", async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {
     try {
-      if (err || !user) {
+      if (!user) {
         const error = new Error("An error occurred.");
-
-        return next(error);
+        console.log("in error");
+        return res.status(401).send({ data: "incorrect password or email" });
       }
 
       req.login(user, { session: false }, async (error) => {

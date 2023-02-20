@@ -25,9 +25,6 @@ const secureRoute = require("./routes/secure-routes");
 const app = express();
 app.use(express.json());
 
-findUsers();
-addUser();
-
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/", routes);
