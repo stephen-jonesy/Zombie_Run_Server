@@ -8,16 +8,22 @@ exports.findUsers = () => {
 };
 
 exports.addUser = (req, res, next) => {
-  const obj = {
-    username: "user5",
-    email: "user5@stuff.com",
-    name: "user5",
-    password: "12345",
-    profile_image_url: "",
-  };
-  users.create(obj).then(() => {
-    res.status(201).send({ data: "success" });
-  });
+  // const obj = {
+  //   username: "user5",
+  //   email: "user5@stuff.com",
+  //   name: "user5",
+  //   password: "12345",
+  //   profile_image_url: "",
+  // };
+  users
+    .create(req.body)
+    .then(() => {
+      res.status(201).send({ message: "success" });
+    })
+    .catch((err) => {
+      next(err);
+      res.status(400).send({ message: "invalid" });
+    });
 };
 
 exports.updateUser = (req, res, next) => {
