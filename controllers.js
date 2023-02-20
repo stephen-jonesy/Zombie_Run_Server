@@ -1,9 +1,9 @@
 const MongoClient = require("mongodb").MongoClient;
 const url = "mongodb://localhost:27017/";
-const user = require("./models/user");
+const users = require("./models/user");
 
 exports.findCustomers = () => {
-  user.find().then((result) => {
+  users.find().then((result) => {
     console.log(result);
   });
 };
