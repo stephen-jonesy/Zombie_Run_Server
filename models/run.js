@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const RunSchema = new Schema({
   user_id: {
     type: String,
-    unique: true,
   },
   run_data: {
     type: Array,

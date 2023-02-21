@@ -1,7 +1,13 @@
 const express = require("express");
-const { updateUser } = require("../controllers");
+const {
+  updateUser,
+  postRun,
+  updateRun,
+  getRunsByUser,
+} = require("../controllers");
 const router = express.Router();
 
+//user routes
 router.get("/", (req, res, next) => {
   res.json({
     message: "You made it to the secure route",
@@ -11,5 +17,12 @@ router.get("/", (req, res, next) => {
 });
 
 router.patch("/", updateUser);
+
+// runs routes
+router.get("/:user_id", getRunsByUser);
+
+router.post("/", postRun);
+
+router.patch("/", updateRun);
 
 module.exports = router;
