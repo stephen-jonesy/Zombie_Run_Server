@@ -1,7 +1,7 @@
 const MongoClient = require("mongodb").MongoClient;
-const users = require("./models/user");
-const runs = require("./models/run");
-const { response } = require(".");
+const users = require("../models/user");
+const runs = require("../models/run");
+const { response } = require("..");
 
 exports.findUsers = () => {
   users.find().then((result) => {
@@ -10,23 +10,12 @@ exports.findUsers = () => {
 };
 
 exports.addUser = (req, res, next) => {
-  // const obj = {
-  //   username: "user5",
-  //   email: "user5@stuff.com",
-  //   name: "user5",
-  //   password: "12345",
-  //   profile_image_url: "",
-  // };
   users
     .create(req.body)
     .then(() => {
       res.status(201).send({ message: "success" });
     })
-    .catch((err) => {
-      console.log(err);
-      next(err);
-      res.status(400).send({ message: "invalid" });
-    });
+    .catch(next);
 };
 
 exports.updateUser = (req, res, next) => {
@@ -35,14 +24,12 @@ exports.updateUser = (req, res, next) => {
     .then((result) => {
       res.status(200).send({ result });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(next);
 };
 
 exports.getRunsByUser = (req, res, next) => {
   const user = req.params;
-  console.log(user);
+  // console.log(user);
   runs
     .find({ user })
     .then((result) => {
@@ -65,6 +52,7 @@ exports.postRun = (req, res, next) => {
 };
 
 exports.updateRun = (req, res, next) => {
+  console.log(req.body);
   runs
     .findOneAndUpdate({ _id: req.body._id }, req.body, { new: true })
     .then((result) => {
@@ -74,4 +62,28 @@ exports.updateRun = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+exports.deleteRun = (req, res, next) => {
+  const run = req.params;
+  runs
+    .findOneAndDelete({ _id: run.run_id })
+    .then(() => {
+      console.log("deleted run id", run.run_id);
+      res.sendStatus(204);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.deleteUser = (req, res, next) => {
+  const user = req.params;
+  users
+    .findOneAndDelete({ _id: user.user_id })
+    .then(() => {
+      console.log("deleted user id", user.user_id);
+      res.sendStatus(204);
+    })
+    .catch(next);
 };

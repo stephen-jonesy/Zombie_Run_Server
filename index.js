@@ -8,7 +8,7 @@ const {
   addCustomers,
   findUsers,
   addUser,
-} = require("./controllers");
+} = require("./controllers/controllers");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 
@@ -38,6 +38,15 @@ app.use("/runs", passport.authenticate("jwt", { session: false }), secureRoute);
 
 // Handle errors.
 app.use(function (err, req, res, next) {
+  if (err.code === 11000) {
+    res.status(400)
+    .send({message: "Duplicate field. Please enter a unique username/email"})
+  }
+  if (err._message === "users validation failed") {
+    res
+      .status(422)
+      .send({ message: `${err._message}. Please enter all required fields` });
+  }
   res.status(err.status || 500);
   res.json({ error: err });
 });
