@@ -162,7 +162,7 @@ describe("App", () => {
           });
       });
     });
-    it.only("should get all runs by user id", () => {
+    it("should get all runs by user id", () => {
       return loginDefaultUser().then((token) => {
         return request(app)
           .get(`/user?secret_token=${token}`)
