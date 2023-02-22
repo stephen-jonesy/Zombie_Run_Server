@@ -27,12 +27,25 @@ exports.updateUser = (req, res, next) => {
     .catch(next);
 };
 
+exports.deleteUser = (req, res, next) => {
+  const user = req.params;
+  users
+    .findOneAndDelete({ _id: user.user_id })
+    .then(() => {
+      // console.log("deleted user id", user.user_id);
+      res.sendStatus(204);
+    })
+    .catch(next);
+};
+
 exports.getRunsByUser = (req, res, next) => {
   const user = req.params;
+  console.log(user);
   // console.log(user);
   runs
-    .find({ user })
+    .find({ user_id: user.user_id })
     .then((result) => {
+      console.log(result);
       res.status(200).send({ result });
     })
     .catch((err) => {
@@ -69,21 +82,11 @@ exports.deleteRun = (req, res, next) => {
   runs
     .findOneAndDelete({ _id: run.run_id })
     .then(() => {
-      console.log("deleted run id", run.run_id);
+      // console.log("deleted run id", run.run_id);
       res.sendStatus(204);
     })
     .catch((err) => {
       console.log(err);
+      next(err)
     });
-};
-
-exports.deleteUser = (req, res, next) => {
-  const user = req.params;
-  users
-    .findOneAndDelete({ _id: user.user_id })
-    .then(() => {
-      console.log("deleted user id", user.user_id);
-      res.sendStatus(204);
-    })
-    .catch(next);
 };

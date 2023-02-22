@@ -17,7 +17,6 @@ router.get("/", (req, res, next) => {
       user: req.user,
       token: req.query.secret_token,
     })
-    .catch(next);
 });
 
 router.patch("/", updateUser);

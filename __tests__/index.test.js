@@ -96,7 +96,9 @@ describe("App", () => {
         password: "12345",
         profile_image_url: "",
       };
-      return request(app).post("/signup").send(obj).expect(201);
+      return request(app).post("/signup")
+      .send(obj)
+      .expect(201);
     });
     it("should return 422, field missing", () => {
       const obj = {
@@ -115,7 +117,7 @@ describe("App", () => {
           );
         });
     });   
-     it("should return 400, duplicate field", () => {
+     it("should return 400, duplicate field error", () => {
       const obj = {
         username: "user1",
         email: "user1@stuff.com",
@@ -160,7 +162,7 @@ describe("App", () => {
           });
       });
     });
-    it("should get all runs by user id", () => {
+    it.only("should get all runs by user id", () => {
       return loginDefaultUser().then((token) => {
         return request(app)
           .get(`/user?secret_token=${token}`)
@@ -172,6 +174,21 @@ describe("App", () => {
               .expect(200)
               .then(({ body }) => {
                 expect(body.result.length).toBe(1);
+              });
+          });
+      });
+    });   
+    it.only("should return empty array; user id not found", () => {
+      return loginDefaultUser().then((token) => {
+        return request(app)
+          .get(`/user?secret_token=${token}`)
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.message).toBe("You made it to the secure route");
+            return request(app)
+              .get(`/runs/26?secret_token=${token}`)
+              .then(({ body }) => {
+                expect(body.result.length).toBe(0);
               });
           });
       });
@@ -218,6 +235,6 @@ describe("App", () => {
               });
           });
       });
-    });
+    });    
   });
 });
