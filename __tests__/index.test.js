@@ -178,7 +178,7 @@ describe("App", () => {
           });
       });
     });   
-    it.only("should return empty array; user id not found", () => {
+    it("should return empty array; user id not found", () => {
       return loginDefaultUser().then((token) => {
         return request(app)
           .get(`/user?secret_token=${token}`)
