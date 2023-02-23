@@ -11,14 +11,23 @@ beforeEach(async () => {
   await users.deleteMany({});
   await runs.deleteMany({});
   await users.create({
+    _id: "53f63ef61584ab8441b3fdd8",
     username: "user1",
     email: "user1@stuff.com",
     name: "user1",
     password: "12345",
     profile_image_url: "",
   });
+  await users.create({
+    _id: "93f63ef61584ab8441b3fdd8",
+    username: "user1000",
+    email: "user1000@stuff.com",
+    name: "user1000",
+    password: "12345",
+    profile_image_url: "",
+  });
   await runs.create({
-    user_id: "263248919372",
+    user_id: "53f63ef61584ab8441b3fdd8",
     run_data: [],
     achievements: [],
     created_at: new Date(Date.now()).toISOString(),
@@ -41,7 +50,7 @@ function loginDefaultUser() {
 
 function runsByUserId(token) {
   return request(app)
-    .get(`/runs/263248919372?secret_token=${token}`)
+    .get(`/runs/53f63ef61584ab8441b3fdd8?secret_token=${token}`)
     .expect(200)
     .then(({ body }) => {
       // console.log("body", body);
@@ -191,8 +200,9 @@ describe("App", () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.message).toBe("You made it to the secure route");
+            const userId = body.user._id
             return request(app)
-              .get(`/runs/263248919372?secret_token=${token}`)
+              .get(`/runs/${userId}?secret_token=${token}`)
               .expect(200)
               .then(({ body }) => {
                 expect(body.result.length).toBe(1);
@@ -200,7 +210,7 @@ describe("App", () => {
           });
       });
     });
-    it("404; run not found with user id", () => {
+    it("200; run not found with user id", () => {
       return loginDefaultUser().then((token) => {
         return request(app)
           .get(`/user?secret_token=${token}`)
@@ -208,14 +218,17 @@ describe("App", () => {
           .then(({ body }) => {
             expect(body.message).toBe("You made it to the secure route");
             return request(app)
-              .get(`/runs/26?secret_token=${token}`)
-              .expect(404);
+              .get(`/runs/93f63ef61584ab8441b3fdd8?secret_token=${token}`)
+              .expect(200)
+              .then(({body}) => {
+                expect(body.message).toBe("No runs found")
+              })
           });
       });
     });
     it("should update run", () => {
       const obj = {
-        user_id: "263248919372",
+        user_id: "53f63ef61584ab8441b3fdd8",
         created_at: new Date(1676989500431).toISOString(),
       };
       return loginDefaultUser().then((token) => {
@@ -232,7 +245,6 @@ describe("App", () => {
               .send(obj)
               .expect(200)
               .then(({ body }) => {
-                console.log("body", body);
               });
           });
       });
@@ -245,7 +257,7 @@ describe("App", () => {
           .then(({ body }) => {
             expect(body.message).toBe("You made it to the secure route");
             return request(app)
-              .get(`/runs/263248919372?secret_token=${token}`)
+              .get(`/runs/53f63ef61584ab8441b3fdd8?secret_token=${token}`)
               .expect(200)
               .then(({ body }) => {
                 const run_id = body.result[0]._id;
