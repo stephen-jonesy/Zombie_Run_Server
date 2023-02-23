@@ -21,8 +21,9 @@ if (!process.env.NODE_ENV) {
 
 require("./auth/auth");
 
-const routes = require("./routes/routes");
-const secureRoute = require("./routes/secure-routes");
+const authRoute = require("./routes/authRoute");
+const userRoutes = require("./routes/userRoutes");
+const runsRoutes = require("./routes/runsRoutes");
 const {
   duplicateKeyMongooseError,
   userValidationFailedError,
@@ -33,12 +34,12 @@ app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/", routes);
+app.use("/", authRoute);
 
 // Plug in the JWT strategy as a middleware so only verified users can access this route.
-app.use("/user", passport.authenticate("jwt", { session: false }), secureRoute);
+app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes);
 
-app.use("/runs", passport.authenticate("jwt", { session: false }), secureRoute);
+app.use("/runs", passport.authenticate("jwt", { session: false }), runsRoutes);
 
 // Handle errors.
 app.use(duplicateKeyMongooseError);

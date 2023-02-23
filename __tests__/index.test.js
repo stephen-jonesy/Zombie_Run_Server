@@ -8,21 +8,21 @@ require("dotenv").config();
 
 beforeEach(async () => {
   await mongoose.connect(process.env.MONGO_URI_TEST);
-  // await users.deleteMany({});
-  // await runs.deleteMany({});
-  // await users.create({
-  //   username: "user1",
-  //   email: "user1@stuff.com",
-  //   name: "user1",
-  //   password: "12345",
-  //   profile_image_url: "",
-  // });
-  // await runs.create({
-  //   user_id: "263248919372",
-  //   run_data: [],
-  //   achievements: [],
-  //   created_at: new Date(Date.now()).toISOString(),
-  // });
+  await users.deleteMany({});
+  await runs.deleteMany({});
+  await users.create({
+    username: "user1",
+    email: "user1@stuff.com",
+    name: "user1",
+    password: "12345",
+    profile_image_url: "",
+  });
+  await runs.create({
+    user_id: "263248919372",
+    run_data: [],
+    achievements: [],
+    created_at: new Date(Date.now()).toISOString(),
+  });
 });
 
 /* Closing database connection after each test. */
@@ -81,6 +81,32 @@ describe("App", () => {
             return request(app)
               .delete(`/user/${body.user._id}?secret_token=${token}`)
               .expect(204);
+          });
+      });
+    });
+    it("should update user", () => {
+      const obj = {
+        username: "user100",
+        email: "user100@user.com",
+        profile_image_url: "",
+      };
+      return loginDefaultUser().then((token) => {
+        return request(app)
+          .get(`/user?secret_token=${token}`)
+          .expect(200)
+          .then((res) => {
+            return { body: res._body.user._id, token: res._body.token };
+          })
+          .then(({ body, token }) => {
+            obj._id = body;
+            return request(app)
+              .patch(`/user/update_user?secret_token=${token}`)
+              .send(obj)
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.result.username).toBe("user100")
+                expect(body.result.email).toBe("user100@user.com")
+              });
           });
       });
     });
@@ -183,15 +209,11 @@ describe("App", () => {
             expect(body.message).toBe("You made it to the secure route");
             return request(app)
               .get(`/runs/26?secret_token=${token}`)
-              .expect(404)
-              // .then((_body, { _body: { message } }) => {
-              //   expect(message).toBe("Run not found, incorrect user id");
-              //   expect(_body.length).toBe(0)
-              // });
+              .expect(404);
           });
       });
     });
-    it.only("should update run", () => {
+    it("should update run", () => {
       const obj = {
         user_id: "263248919372",
         created_at: new Date(1676989500431).toISOString(),
@@ -204,9 +226,9 @@ describe("App", () => {
             return runsByUserId(token);
           })
           .then(({ body, token }) => {
-            obj._id = body._id;
+            obj._id = body.result[0]._id;
             return request(app)
-              .patch(`/runs?secret_token=${token}`)
+              .patch(`/runs/update_run?secret_token=${token}`)
               .send(obj)
               .expect(200)
               .then(({ body }) => {
@@ -226,13 +248,13 @@ describe("App", () => {
               .get(`/runs/263248919372?secret_token=${token}`)
               .expect(200)
               .then(({ body }) => {
-                const run_id = body.result[0]._id
+                const run_id = body.result[0]._id;
                 return request(app)
                   .delete(`/runs/run/${run_id}?secret_token=${token}`)
                   .expect(204);
               });
           });
       });
-    });    
+    });
   });
 });

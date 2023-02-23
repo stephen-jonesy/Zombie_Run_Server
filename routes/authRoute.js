@@ -8,6 +8,9 @@ const router = express.Router();
 router.post("/signup", addUser);
 
 router.post("/login", async (req, res, next) => {
+  if (!req.body.email.length > 0 || !req.body.password.length > 0) {
+    return res.status(400).send({data: "Please provide a valid email and password"})
+  }
   passport.authenticate("login", async (err, user, info) => {
     try {
       if (!user) {
@@ -19,7 +22,7 @@ router.post("/login", async (req, res, next) => {
       req.login(user, { session: false }, async (error) => {
         if (error) return next(error);
 
-        const body = { _id: user._id, email: user.email };
+        const body = { _id: user._id, email: user.email, username: user.username, name: user.name, image: user.profile_image_url };
         const token = jwt.sign({ user: body }, "TOP_SECRET");
         return res.json({ token });
       });
