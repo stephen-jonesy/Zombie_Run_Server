@@ -40,17 +40,17 @@ exports.deleteUser = (req, res, next) => {
 
 exports.getRunsByUser = (req, res, next) => {
   const user = req.params;
-  console.log(user);
-  // console.log(user);
   runs
     .find({ user_id: user.user_id })
     .then((result) => {
-      console.log(result);
+      if (result.length === 0) {
+        return res
+          .status(404)
+          .send({ message: "Run not found, incorrect user id" });
+      }
       res.status(200).send({ result });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(next);
 };
 
 exports.postRun = (req, res, next) => {
@@ -87,6 +87,6 @@ exports.deleteRun = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
-      next(err)
+      next(err);
     });
 };

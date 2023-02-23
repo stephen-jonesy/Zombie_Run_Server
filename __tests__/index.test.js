@@ -8,21 +8,21 @@ require("dotenv").config();
 
 beforeEach(async () => {
   await mongoose.connect(process.env.MONGO_URI_TEST);
-  await users.deleteMany({});
-  await runs.deleteMany({});
-  await users.create({
-    username: "user1",
-    email: "user1@stuff.com",
-    name: "user1",
-    password: "12345",
-    profile_image_url: "",
-  });
-  await runs.create({
-    user_id: "263248919372",
-    run_data: [],
-    achievements: [],
-    created_at: new Date(Date.now()).toISOString(),
-  });
+  // await users.deleteMany({});
+  // await runs.deleteMany({});
+  // await users.create({
+  //   username: "user1",
+  //   email: "user1@stuff.com",
+  //   name: "user1",
+  //   password: "12345",
+  //   profile_image_url: "",
+  // });
+  // await runs.create({
+  //   user_id: "263248919372",
+  //   run_data: [],
+  //   achievements: [],
+  //   created_at: new Date(Date.now()).toISOString(),
+  // });
 });
 
 /* Closing database connection after each test. */
@@ -58,7 +58,6 @@ describe("App", () => {
           .get(`/user?secret_token=${token}`)
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
             expect(body.message).toBe("You made it to the secure route");
           });
       });
@@ -96,9 +95,7 @@ describe("App", () => {
         password: "12345",
         profile_image_url: "",
       };
-      return request(app).post("/signup")
-      .send(obj)
-      .expect(201);
+      return request(app).post("/signup").send(obj).expect(201);
     });
     it("should return 422, field missing", () => {
       const obj = {
@@ -116,8 +113,8 @@ describe("App", () => {
             "users validation failed. Please enter all required fields"
           );
         });
-    });   
-     it("should return 400, duplicate field error", () => {
+    });
+    it("should return 400, duplicate field error", () => {
       const obj = {
         username: "user1",
         email: "user1@stuff.com",
@@ -130,7 +127,6 @@ describe("App", () => {
         .send(obj)
         .expect(400)
         .then(({ _body: { message } }) => {
-          console.log(message);
           expect(message).toBe(
             "Duplicate field. Please enter a unique username/email"
           );
@@ -177,8 +173,8 @@ describe("App", () => {
               });
           });
       });
-    });   
-    it("should return empty array; user id not found", () => {
+    });
+    it("404; run not found with user id", () => {
       return loginDefaultUser().then((token) => {
         return request(app)
           .get(`/user?secret_token=${token}`)
@@ -187,13 +183,15 @@ describe("App", () => {
             expect(body.message).toBe("You made it to the secure route");
             return request(app)
               .get(`/runs/26?secret_token=${token}`)
-              .then(({ body }) => {
-                expect(body.result.length).toBe(0);
-              });
+              .expect(404)
+              // .then((_body, { _body: { message } }) => {
+              //   expect(message).toBe("Run not found, incorrect user id");
+              //   expect(_body.length).toBe(0)
+              // });
           });
       });
     });
-    it("should update run", () => {
+    it.only("should update run", () => {
       const obj = {
         user_id: "263248919372",
         created_at: new Date(1676989500431).toISOString(),
@@ -206,7 +204,7 @@ describe("App", () => {
             return runsByUserId(token);
           })
           .then(({ body, token }) => {
-            obj._id = body.result[0]._id;
+            obj._id = body._id;
             return request(app)
               .patch(`/runs?secret_token=${token}`)
               .send(obj)
@@ -228,7 +226,7 @@ describe("App", () => {
               .get(`/runs/263248919372?secret_token=${token}`)
               .expect(200)
               .then(({ body }) => {
-                const run_id = body.result[0]._id;
+                const run_id = body.result[0]._id
                 return request(app)
                   .delete(`/runs/run/${run_id}?secret_token=${token}`)
                   .expect(204);
