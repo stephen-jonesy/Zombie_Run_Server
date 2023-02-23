@@ -15,7 +15,7 @@ router.get("/", (req, res, next) => {
       })
   });
   
-  router.patch("/update_user", updateUser);
+  router.patch("/", updateUser);
   
   router.delete("/:user_id", deleteUser);
 

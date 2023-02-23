@@ -12,8 +12,8 @@ router.get("/:user_id", getRunsByUser);
 
 router.post("/", postRun);
 
-router.patch("/update_run", updateRun);
+router.patch("/", updateRun);
 
-router.delete("/run/:run_id", deleteRun);
+router.delete("/:run_id", deleteRun);
 
 module.exports = router;

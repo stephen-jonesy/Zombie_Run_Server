@@ -109,7 +109,7 @@ describe("App", () => {
           .then(({ body, token }) => {
             obj._id = body;
             return request(app)
-              .patch(`/user/update_user?secret_token=${token}`)
+              .patch(`/user?secret_token=${token}`)
               .send(obj)
               .expect(200)
               .then(({ body }) => {
@@ -148,7 +148,7 @@ describe("App", () => {
             "users validation failed. Please enter all required fields"
           );
         });
-    });
+    });    
     it("should return 400, duplicate field error", () => {
       const obj = {
         username: "user1",
@@ -241,7 +241,7 @@ describe("App", () => {
           .then(({ body, token }) => {
             obj._id = body.result[0]._id;
             return request(app)
-              .patch(`/runs/update_run?secret_token=${token}`)
+              .patch(`/runs/?secret_token=${token}`)
               .send(obj)
               .expect(200)
               .then(({ body }) => {
@@ -262,7 +262,7 @@ describe("App", () => {
               .then(({ body }) => {
                 const run_id = body.result[0]._id;
                 return request(app)
-                  .delete(`/runs/run/${run_id}?secret_token=${token}`)
+                  .delete(`/runs/${run_id}?secret_token=${token}`)
                   .expect(204);
               });
           });
