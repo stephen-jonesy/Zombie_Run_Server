@@ -62,7 +62,7 @@ function runsByUserId(token) {
 describe("App", () => {
   describe('Error-handling - 404 error for incorrect endpoint', () => {
     it('should return 404 error if an endpoint is misspelled', () => {
-      return request(app).get("/loginn")
+      return request(app).get("/apii")
         .expect(404)
         .then(({ body }) => {
           expect(body.message).toBe("Path not found")
@@ -244,6 +244,7 @@ describe("App", () => {
       const obj = {
         user_id: "53f63ef61584ab8441b3fdd8",
         created_at: new Date(1676989500431).toISOString(),
+        run_data: {"distance": 1}
       };
       return loginDefaultUser().then((token) => {
         return request(app)
@@ -259,8 +260,10 @@ describe("App", () => {
               .send(obj)
               .expect(200)
               .then(({ body }) => {
+                console.log(body);
                 expect(body.result).toHaveProperty("created_at", expect.any(String))
                 expect(body.result).toHaveProperty("user_id", "53f63ef61584ab8441b3fdd8")
+                expect(body.result.run_data).toHaveProperty("distance", 1)
               });
           });
       });

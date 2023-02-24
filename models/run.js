@@ -7,7 +7,7 @@ const RunSchema = new Schema({
     type: String,
   },
   run_data: {
-    type: Array,
+    type: Object,
   },
   achievements: {
     type: Array,
