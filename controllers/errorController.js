@@ -21,3 +21,10 @@ exports.defaultErrorHandler = (app) => {
       res.status(404).send({ message: "Path not found" })
   })
 }
+
+exports.undefinedUserId = (err, req, res, next) => {
+  if (err.value === "undefined") {
+    res.status(400)
+    .send({message: "Bad request"})
+  } else next(err)
+}

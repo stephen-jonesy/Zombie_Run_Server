@@ -11,11 +11,6 @@ exports.findUsers = () => {
 };
 
 exports.addUser = (req, res, next) => {
-  // if (!req.body.email.length > 0 || !req.body.password.length > 0) {
-  //   return res
-  //     .status(400)
-  //     .send({ data: "Please provide a valid email and password" });
-  // }
   users
     .create(req.body)
     .then(() => {
@@ -47,6 +42,8 @@ exports.deleteUser = (req, res, next) => {
     .catch(next);
 };
 
+// runs controllers
+
 exports.getRunsByUser = (req, res, next) => {
   const user = req.params;
   users
@@ -64,14 +61,16 @@ exports.getRunsByUser = (req, res, next) => {
         res.status(200).send({ result });
       });
     })
-    .catch(next);
+    .catch((err) => {
+      next(err)
+    });
 };
 
-// runs controllers
-
 exports.postRun = (req, res, next) => {
+  const body = { ...req.body, created_at: new Date(Date.now()).toISOString() };
   runs
-    .create(req.body)
+    // .create(req.body)
+    .create(body)
     .then((result) => {
       res.status(201).send({ result });
     })

@@ -16,7 +16,7 @@ const UserModel = require("./models/user");
 
 dotenv.config({ path: "./config/config.env" });
 
-if (!process.env.NODE_ENV) {
+if (process.env.NODE_ENV !== "test") {
   connectDB();
 }
 
@@ -30,7 +30,8 @@ const defaultRoute = require("./routes/defaultRoute");
 const {
   duplicateKeyMongooseError,
   userValidationFailedError,
-  defaultErrorHandler
+  defaultErrorHandler,
+  undefinedUserId
 } = require("./controllers/errorController");
 
 const app = express();
@@ -50,6 +51,7 @@ app.use("/runs", passport.authenticate("jwt", { session: false }), runsRoutes);
 defaultErrorHandler(app)
 app.use(duplicateKeyMongooseError);
 app.use(userValidationFailedError);
+app.use(undefinedUserId)
 app.use(function (err, req, res, next) {
   console.log(err);
   res.status(err.status || 500);
