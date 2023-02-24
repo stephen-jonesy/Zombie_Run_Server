@@ -2,6 +2,7 @@ const MongoClient = require("mongodb").MongoClient;
 const users = require("../models/user");
 const runs = require("../models/run");
 const { response } = require("..");
+const { fetchApiEndpoints } = require("../models/default");
 
 exports.findUsers = () => {
   users.find().then((result) => {
@@ -10,7 +11,6 @@ exports.findUsers = () => {
 };
 
 exports.addUser = (req, res, next) => {
-  console.log(req.body);
   // if (!req.body.email.length > 0 || !req.body.password.length > 0) {
   //   return res
   //     .status(400)
@@ -22,8 +22,8 @@ exports.addUser = (req, res, next) => {
       res.status(201).send({ message: "success" });
     })
     .catch((err) => {
-      console.log(err);
-      next(err)
+      // console.log(err);
+      next(err);
     });
 };
 
@@ -59,9 +59,7 @@ exports.getRunsByUser = (req, res, next) => {
       }
       runs.find({ user_id: user.user_id }).then((result) => {
         if (result.length === 0) {
-          return res
-            .status(200)
-            .send({ message: "No runs found" });
+          return res.status(200).send({ message: "No runs found" });
         }
         res.status(200).send({ result });
       });
@@ -106,4 +104,12 @@ exports.deleteRun = (req, res, next) => {
       console.log(err);
       next(err);
     });
+};
+
+exports.getApiEndpoints = (request, response, next) => {
+  fetchApiEndpoints()
+    .then((endpoints) => {
+      response.status(200).send({ endpoints });
+    })
+    .catch(next);
 };

@@ -16,13 +16,14 @@ const UserModel = require("./models/user");
 
 dotenv.config({ path: "./config/config.env" });
 
-connectDB();
+  connectDB();
 
 require("./auth/auth");
 
 const authRoute = require("./routes/authRoute");
 const userRoutes = require("./routes/userRoutes");
 const runsRoutes = require("./routes/runsRoutes");
+const defaultRoute = require("./routes/defaultRoute");
 const {
   duplicateKeyMongooseError,
   userValidationFailedError,
@@ -33,6 +34,7 @@ app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use("/", defaultRoute)
 app.use("/", authRoute);
 
 // Plug in the JWT strategy as a middleware so only verified users can access this route.
