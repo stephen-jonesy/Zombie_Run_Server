@@ -65,7 +65,7 @@ describe("App", () => {
       return request(app).get("/loginn")
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("Path not found")
+          expect(body.message).toBe("Path not found")
         })
     });
   });
