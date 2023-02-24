@@ -28,7 +28,7 @@ beforeEach(async () => {
   });
   await runs.create({
     user_id: "53f63ef61584ab8441b3fdd8",
-    run_data: [],
+    run_data: { distance: 1},
     achievements: [],
     created_at: new Date(Date.now()).toISOString(),
   });
@@ -53,8 +53,6 @@ function runsByUserId(token) {
     .get(`/runs/53f63ef61584ab8441b3fdd8?secret_token=${token}`)
     .expect(200)
     .then(({ body }) => {
-      // console.log("body", body);
-      // console.log("token", token);
       return { body, token };
     });
 }
@@ -187,9 +185,7 @@ describe("App", () => {
     it("should create a run", () => {
       const obj = {
         user_id: "263248919372",
-        run_data: [],
         achievements: [],
-        created_at: new Date(Date.now()).toISOString(),
       };
       return loginDefaultUser().then((token) => {
         return request(app)
@@ -202,7 +198,9 @@ describe("App", () => {
               .send(obj)
               .expect(201)
               .then(({ body }) => {
+                console.log(body);
                 expect(body.result.user_id).toBe("263248919372");
+                // expect(body.result.run_data).toHaveProperty("distance", 2.4)
               });
           });
       });
@@ -220,6 +218,23 @@ describe("App", () => {
               .expect(200)
               .then(({ body }) => {
                 expect(body.result.length).toBe(1);
+              });
+          });
+      });
+    });
+    it.only("should return 400, undefined user id", () => {
+      return loginDefaultUser().then((token) => {
+        return request(app)
+          .get(`/user?secret_token=${token}`)
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.message).toBe("You made it to the secure route");
+            const userId = undefined
+            return request(app)
+              .get(`/runs/${userId}?secret_token=${token}`)
+              .expect(400)
+              .then(({ body }) => {
+                expect(body.message).toBe("Bad request");
               });
           });
       });
@@ -243,8 +258,7 @@ describe("App", () => {
     it("should update run", () => {
       const obj = {
         user_id: "53f63ef61584ab8441b3fdd8",
-        created_at: new Date(1676989500431).toISOString(),
-        run_data: {"distance": 1}
+        run_data: {"distance": 2}
       };
       return loginDefaultUser().then((token) => {
         return request(app)
@@ -263,7 +277,7 @@ describe("App", () => {
                 console.log(body);
                 expect(body.result).toHaveProperty("created_at", expect.any(String))
                 expect(body.result).toHaveProperty("user_id", "53f63ef61584ab8441b3fdd8")
-                expect(body.result.run_data).toHaveProperty("distance", 1)
+                expect(body.result.run_data).toHaveProperty("distance", 2)
               });
           });
       });

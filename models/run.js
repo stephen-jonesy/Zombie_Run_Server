@@ -8,6 +8,7 @@ const RunSchema = new Schema({
   },
   run_data: {
     type: Object,
+    default: {}
   },
   achievements: {
     type: Array,
@@ -15,7 +16,7 @@ const RunSchema = new Schema({
   created_at: {
     type: Date,
   },
-});
+}, { minimize: false });
 
 const RunModel = mongoose.model("runs", RunSchema);
 
