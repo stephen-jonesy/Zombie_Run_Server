@@ -2,6 +2,6 @@ const { getApiEndpoints } = require("../controllers/controllers");
 const express = require("express");
 const router = express.Router();
 
-router.get("/", getApiEndpoints)
+router.get("/api", getApiEndpoints)
 
 module.exports = router;

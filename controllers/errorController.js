@@ -15,3 +15,9 @@ exports.userValidationFailedError = (err, req, res, next) => {
       .send({ message: `${err._message}. Please enter all required fields` });
   } else next(err);
 };
+
+exports.defaultErrorHandler = (app) => {
+  app.use("/*", (req, res, next) => {
+      res.status(404).send({ msg: "Path not found" })
+  })
+}

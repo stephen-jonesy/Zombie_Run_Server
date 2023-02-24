@@ -60,6 +60,15 @@ function runsByUserId(token) {
 }
 
 describe("App", () => {
+  describe('Error-handling - 404 error for incorrect endpoint', () => {
+    it('should return 404 error if an endpoint is misspelled', () => {
+      return request(app).get("/loginn")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Path not found")
+        })
+    });
+  });
   describe("get /user", () => {
     it("returns status: 200 and logged in user ", () => {
       return loginDefaultUser().then((token) => {
@@ -276,15 +285,15 @@ describe("App", () => {
       });
     });
   });
-  describe('Default endpoint', () => {
+  describe('Default api endpoint', () => {
     it('200; returns with JSON for the api endpoints and their details', () => {
       return request(app)
-      .get("/")
+      .get("/api")
       .expect(200)
       .then(({ body: { endpoints } }) => {
         expect(typeof endpoints).toBe("object")
         expect(Object.keys(endpoints)).toHaveLength(10);
-        expect(endpoints).toHaveProperty('GET /');
+        expect(endpoints).toHaveProperty('GET /api');
         expect(endpoints).toHaveProperty('POST /signup');
         expect(endpoints).toHaveProperty('GET /login');
         expect(endpoints).toHaveProperty('GET /user');

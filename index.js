@@ -18,6 +18,7 @@ dotenv.config({ path: "./config/config.env" });
 
   connectDB();
 
+
 require("./auth/auth");
 
 const authRoute = require("./routes/authRoute");
@@ -27,6 +28,7 @@ const defaultRoute = require("./routes/defaultRoute");
 const {
   duplicateKeyMongooseError,
   userValidationFailedError,
+  defaultErrorHandler
 } = require("./controllers/errorController");
 
 const app = express();
@@ -43,6 +45,7 @@ app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes);
 app.use("/runs", passport.authenticate("jwt", { session: false }), runsRoutes);
 
 // Handle errors.
+defaultErrorHandler(app)
 app.use(duplicateKeyMongooseError);
 app.use(userValidationFailedError);
 app.use(function (err, req, res, next) {

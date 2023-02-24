@@ -2,7 +2,7 @@ const MongoClient = require("mongodb").MongoClient;
 const users = require("../models/user");
 const runs = require("../models/run");
 const { response } = require("..");
-const { fetchApiEndpoints } = require("../models/default");
+const { fetchApiEndpoints } = require("../models/endpoints");
 
 exports.findUsers = () => {
   users.find().then((result) => {
@@ -107,6 +107,7 @@ exports.deleteRun = (req, res, next) => {
 };
 
 exports.getApiEndpoints = (request, response, next) => {
+  console.log("apiEndpoints");
   fetchApiEndpoints()
     .then((endpoints) => {
       response.status(200).send({ endpoints });
