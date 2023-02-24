@@ -107,7 +107,6 @@ exports.deleteRun = (req, res, next) => {
 };
 
 exports.getApiEndpoints = (request, response, next) => {
-  console.log("apiEndpoints");
   fetchApiEndpoints()
     .then((endpoints) => {
       response.status(200).send({ endpoints });
