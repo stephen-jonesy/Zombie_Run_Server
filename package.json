@@ -1,7 +1,7 @@
 {
   "name": "zombie_run_server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "listen.js",
   "devDependencies": {
     "cross-env": "^7.0.3",
     "jest": "^29.4.3",
@@ -12,7 +12,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --testTimeout=5000 --detectOpenHandles",
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node listen.js"
   },
   "repository": {
     "type": "git",
