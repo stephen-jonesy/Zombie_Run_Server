@@ -15,9 +15,8 @@ const bodyParser = require("body-parser");
 const UserModel = require("./models/user");
 
 dotenv.config({ path: "./config/config.env" });
-if (!process.env.NODE_ENV) {
-  connectDB();
-}
+
+connectDB();
 
 require("./auth/auth");
 
