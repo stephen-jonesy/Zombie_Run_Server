@@ -130,7 +130,12 @@ describe("App", () => {
         password: "12345",
         profile_image_url: "",
       };
-      return request(app).post("/signup").send(obj).expect(201);
+      return request(app).post("/signup")
+      .send(obj)
+      .expect(201)
+      .then(({body}) => {
+        expect(body.message).toBe("success")
+      })
     });
     it("should return 422, field missing", () => {
       const obj = {
@@ -245,6 +250,8 @@ describe("App", () => {
               .send(obj)
               .expect(200)
               .then(({ body }) => {
+                expect(body.result).toHaveProperty("created_at", expect.any(String))
+                expect(body.result).toHaveProperty("user_id", "53f63ef61584ab8441b3fdd8")
               });
           });
       });
@@ -267,6 +274,27 @@ describe("App", () => {
               });
           });
       });
+    });
+  });
+  describe('Default endpoint', () => {
+    it('200; returns with JSON for the api endpoints and their details', () => {
+      return request(app)
+      .get("/")
+      .expect(200)
+      .then(({ body: { endpoints } }) => {
+        expect(typeof endpoints).toBe("object")
+        expect(Object.keys(endpoints)).toHaveLength(10);
+        expect(endpoints).toHaveProperty('GET /');
+        expect(endpoints).toHaveProperty('POST /signup');
+        expect(endpoints).toHaveProperty('GET /login');
+        expect(endpoints).toHaveProperty('GET /user');
+        expect(endpoints).toHaveProperty('PATCH /user');
+        expect(endpoints).toHaveProperty('DELETE /user/:user_id');
+        expect(endpoints).toHaveProperty('POST /runs');
+        expect(endpoints).toHaveProperty('GET /runs:user_id');
+        expect(endpoints).toHaveProperty('PATCH /runs');
+        expect(endpoints).toHaveProperty('DELETE /runs/:run_id');
+      })
     });
   });
 });

@@ -1,0 +1,123 @@
+{
+    "GET /": {
+      "description": "serves up a json representation of all the available endpoints of the api"
+    },
+    "POST /signup" : {
+      "description": "creates a user account",
+      "exampleResponse": {
+        "body": {
+          "message": "success"
+        }
+      }
+    },
+    "GET /login": {
+      "description": "authenticates user",
+      "exampleResponse": {
+        "body": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
+        }
+      }
+    },
+    "GET /user": {
+      "description": "logs in user",
+      "queries": ["secret_token"],
+      "exampleResponse": {
+        "body": [
+          {
+            "message": "You made it to the secure route"
+          }
+        ]
+      }
+    },
+    "PATCH /user": {
+      "description": "updates a user",
+      "queries": ["secret_token"],
+      "exampleBody": {
+        "username": "user100",
+        "email": "user100@user.com",
+        "profile_image_url": ""
+      },
+      "exampleResponse": {
+        "body": [
+          {
+            "result": {
+              "_id": "53f63ef61584ab8441b3fdd8",
+              "username": "user100",
+              "email": "user100@user.com",
+              "name": "user1",
+              "password": "$2b$10$KGkrcw/rfKXW9P4GhAaXoOP574VpL5GPGMPUyu6BcSXzcOKy5f5C2",
+              "profile_image_url": "",
+              "__v": 0
+            }
+          }
+        ]
+      }
+    },
+    "DELETE /user/:user_id": {
+      "description": "deletes user for given id",
+      "parameter": "user:id: Number",
+      "queries": ["secret_token"],
+      "exampleResponse": {}
+    },
+    "POST /runs" : {
+      "description": "creates a a run for that user",
+      "queries": ["secret_token"],
+      "exampleResponse": {
+        "body": {
+            "result": {
+              "user_id": "263248919372",
+              "run_data": [],
+              "achievements": [],
+              "created_at": "2023-02-24T11:11:48.987Z",
+              "_id": "63f89b75cf7ebb53d252410d",
+              "__v": 0
+            }
+        }
+      }
+    },
+    "GET /runs:user_id" : {
+      "description": "gets runs for user id",
+      "queries": ["secret_token"],
+      "exampleResponse": {
+        "body": {
+          "result": [
+            {
+              "_id": "63f89c9e13b6a8a69cc7cbe9",
+              "user_id": "53f63ef61584ab8441b3fdd8",
+              "run_data": [],
+              "achievements": [],
+              "created_at": "2023-02-24T11:16:46.811Z",
+              "__v": 0
+            }
+          ]
+        }
+      }
+    },    
+    "PATCH /runs" : {
+      "description": "updates run",
+      "queries": ["secret_token"],
+      "exampleBody" : {
+          "user_id": "53f63ef61584ab8441b3fdd8",
+          "created_at": "2023-02-21T14:25:00.431Z"
+      },
+      "exampleResponse": {
+        "body": {
+          "result": 
+            {
+              "_id": "63f89e653e4f78d0cbbd6ff9",
+              "user_id": "53f63ef61584ab8441b3fdd8",
+              "run_data": [],
+              "achievements": [],
+              "created_at": "2023-02-21T14:25:00.431Z",
+              "__v": 0
+            }
+        }
+      }
+    },
+    "DELETE /runs/:run_id": {
+      "description": "deletes run for given id",
+      "parameter": "run:id: Number",
+      "queries": ["secret_token"],
+      "exampleResponse": {}
+    }
+  }
