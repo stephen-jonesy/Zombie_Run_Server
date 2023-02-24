@@ -295,7 +295,7 @@ describe("App", () => {
         expect(Object.keys(endpoints)).toHaveLength(10);
         expect(endpoints).toHaveProperty('GET /api');
         expect(endpoints).toHaveProperty('POST /signup');
-        expect(endpoints).toHaveProperty('GET /login');
+        expect(endpoints).toHaveProperty('POST /login');
         expect(endpoints).toHaveProperty('GET /user');
         expect(endpoints).toHaveProperty('PATCH /user');
         expect(endpoints).toHaveProperty('DELETE /user/:user_id');

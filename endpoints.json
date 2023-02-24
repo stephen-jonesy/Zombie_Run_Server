@@ -4,14 +4,25 @@
     },
     "POST /signup" : {
       "description": "creates a user account",
+      "exampleBody": {
+        "username": "user4",
+        "email": "user4@stuff.com",
+        "name": "user4",
+        "password": "12345",
+        "profile_image_url": ""
+      },
       "exampleResponse": {
         "body": {
           "message": "success"
         }
       }
     },
-    "GET /login": {
+    "POST /login": {
       "description": "authenticates user",
+      "exampleBody": {
+        "email": "user1@stuff.com", 
+        "password": "12345" 
+      },
       "exampleResponse": {
         "body": {
           "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."

@@ -19,6 +19,7 @@ dotenv.config({ path: "./config/config.env" });
   connectDB();
 
 
+
 require("./auth/auth");
 
 const authRoute = require("./routes/authRoute");
