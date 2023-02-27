@@ -67,7 +67,7 @@ exports.getRunsByUser = (req, res, next) => {
 };
 
 exports.postRun = (req, res, next) => {
-  const body = { ...req.body, created_at: new Date(Date.now()).toISOString() };
+  const body = { ...req.body, created_at: new Date(Date.now()) };
   runs
     // .create(req.body)
     .create(body)

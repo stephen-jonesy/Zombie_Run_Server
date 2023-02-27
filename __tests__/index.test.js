@@ -198,9 +198,10 @@ describe("App", () => {
               .send(obj)
               .expect(201)
               .then(({ body }) => {
-                console.log(body);
                 expect(body.result.user_id).toBe("263248919372");
-                // expect(body.result.run_data).toHaveProperty("distance", 2.4)
+                expect(body.result).toHaveProperty("achievements", expect.any(Array));
+                expect(body.result).toHaveProperty("run_data", expect.any(Object));
+                expect(body.result).toHaveProperty("created_at", expect.any(String))
               });
           });
       });
@@ -222,7 +223,7 @@ describe("App", () => {
           });
       });
     });
-    it.only("should return 400, undefined user id", () => {
+    it("should return 400, undefined user id", () => {
       return loginDefaultUser().then((token) => {
         return request(app)
           .get(`/user?secret_token=${token}`)
@@ -274,7 +275,6 @@ describe("App", () => {
               .send(obj)
               .expect(200)
               .then(({ body }) => {
-                console.log(body);
                 expect(body.result).toHaveProperty("created_at", expect.any(String))
                 expect(body.result).toHaveProperty("user_id", "53f63ef61584ab8441b3fdd8")
                 expect(body.result.run_data).toHaveProperty("distance", 2)
