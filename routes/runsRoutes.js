@@ -3,17 +3,17 @@ const {
   updateRun,
   getRunsByUser,
   deleteRun,
-} = require("../controllers/controllers");
+} = require("../controllers/runController");
 const express = require("express");
-const router = express.Router();
+const runRouter = express.Router();
 
 // runs routes
-router.get("/:user_id", getRunsByUser);
+runRouter.get("/:user_id", getRunsByUser);
 
-router.post("/", postRun);
+runRouter.post("/", postRun);
 
-router.patch("/", updateRun);
+runRouter.patch("/", updateRun);
 
-router.delete("/:run_id", deleteRun);
+runRouter.delete("/:run_id", deleteRun);
 
-module.exports = router;
+module.exports = runRouter;

@@ -1,15 +1,17 @@
 const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const { addUser } = require("../controllers/controllers");
+const { addUser } = require("../controllers/userController");
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.post("/signup", addUser);
+authRouter.post("/signup", addUser);
 
-router.post("/login", async (req, res, next) => {
+authRouter.post("/login", async (req, res, next) => {
   if (!req.body.email.length > 0 || !req.body.password.length > 0) {
-    return res.status(400).send({data: "Please provide a valid email and password"})
+    return res
+      .status(400)
+      .send({ data: "Please provide a valid email and password" });
   }
   passport.authenticate("login", async (err, user, info) => {
     try {
@@ -22,7 +24,13 @@ router.post("/login", async (req, res, next) => {
       req.login(user, { session: false }, async (error) => {
         if (error) return next(error);
 
-        const body = { _id: user._id, email: user.email, username: user.username, name: user.name, image: user.profile_image_url };
+        const body = {
+          _id: user._id,
+          email: user.email,
+          username: user.username,
+          name: user.name,
+          image: user.profile_image_url,
+        };
         const token = jwt.sign({ user: body }, "TOP_SECRET");
         return res.json({ token });
       });
@@ -32,4 +40,4 @@ router.post("/login", async (req, res, next) => {
   })(req, res, next);
 });
 
-module.exports = router;
+module.exports = authRouter;

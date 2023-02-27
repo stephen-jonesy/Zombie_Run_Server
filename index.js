@@ -8,7 +8,13 @@ const {
   addCustomers,
   findUsers,
   addUser,
-} = require("./controllers/controllers");
+} = require("./controllers/userController");
+const {
+  getRunsByUser,
+  postRun,
+  updateRun,
+  deleteRun,
+} = require("./controllers/runController");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 
@@ -20,18 +26,17 @@ if (process.env.NODE_ENV !== "test") {
   connectDB();
 }
 
-
 require("./auth/auth");
 
 const authRoute = require("./routes/authRoute");
 const userRoutes = require("./routes/userRoutes");
 const runsRoutes = require("./routes/runsRoutes");
-const defaultRoute = require("./routes/defaultRoute");
+const apiRoute = require("./routes/apiRoute");
 const {
   duplicateKeyMongooseError,
   userValidationFailedError,
   defaultErrorHandler,
-  undefinedUserId
+  undefinedUserId,
 } = require("./controllers/errorController");
 
 const app = express();
@@ -39,7 +44,7 @@ app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use("/", defaultRoute)
+app.use("/", apiRoute);
 app.use("/", authRoute);
 
 // Plug in the JWT strategy as a middleware so only verified users can access this route.
@@ -48,10 +53,10 @@ app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes);
 app.use("/runs", passport.authenticate("jwt", { session: false }), runsRoutes);
 
 // Handle errors.
-defaultErrorHandler(app)
+defaultErrorHandler(app);
 app.use(duplicateKeyMongooseError);
 app.use(userValidationFailedError);
-app.use(undefinedUserId)
+app.use(undefinedUserId);
 app.use(function (err, req, res, next) {
   console.log(err);
   res.status(err.status || 500);
