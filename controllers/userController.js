@@ -19,13 +19,21 @@ exports.addUser = (req, res, next) => {
     });
 };
 
-exports.updateUser = (req, res, next) => {
-  users
-    .findOneAndUpdate({ _id: req.body._id }, req.body, { new: true })
-    .then((result) => {
-      res.status(200).send({ result });
-    })
-    .catch(next);
+exports.updateUser = async (req, res, next) => {
+  try {
+    const updatedUser = req.body;
+    const user = await users.findById({ _id: req.body._id });
+    Object.entries(updatedUser).forEach((entry) => {
+      const [k, v] = entry;
+      if (updatedUser[k]) {
+        user[k] = updatedUser[k];
+      }
+    });
+    await user.save();
+    res.status(200).send({ user });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.deleteUser = (req, res, next) => {

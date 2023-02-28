@@ -28,7 +28,7 @@ beforeEach(async () => {
   });
   await runs.create({
     user_id: "53f63ef61584ab8441b3fdd8",
-    run_data: { distance: 1},
+    run_data: { distance: 1 },
     achievements: [],
     created_at: new Date(Date.now()).toISOString(),
   });
@@ -58,13 +58,15 @@ function runsByUserId(token) {
 }
 
 describe("App", () => {
-  describe('Error-handling - 404 error for incorrect endpoint', () => {
-    it('should return 404 error if an endpoint is misspelled', () => {
-      return request(app).get("/apii")
+  describe("Error-handling - 404 error for incorrect endpoint", () => {
+    it("should return 404 error if an endpoint is misspelled", () => {
+      console.log(new Date(Date.now()));
+      return request(app)
+        .get("/apii")
         .expect(404)
         .then(({ body }) => {
-          expect(body.message).toBe("Path not found")
-        })
+          expect(body.message).toBe("Path not found");
+        });
     });
   });
   describe("get /user", () => {
@@ -105,6 +107,7 @@ describe("App", () => {
         username: "user100",
         email: "user100@user.com",
         profile_image_url: "",
+        password: "1234",
       };
       return loginDefaultUser().then((token) => {
         return request(app)
@@ -115,14 +118,12 @@ describe("App", () => {
           })
           .then(({ body, token }) => {
             obj._id = body;
-            return request(app)
-              .patch(`/user?secret_token=${token}`)
-              .send(obj)
-              .expect(200)
-              .then(({ body }) => {
-                expect(body.result.username).toBe("user100")
-                expect(body.result.email).toBe("user100@user.com")
-              });
+            return request(app).patch(`/user?secret_token=${token}`).send(obj)
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.user.username).toBe("user100");
+              expect(body.user.email).toBe("user100@user.com");
+            });
           });
       });
     });
@@ -137,12 +138,13 @@ describe("App", () => {
         password: "12345",
         profile_image_url: "",
       };
-      return request(app).post("/signup")
-      .send(obj)
-      .expect(201)
-      .then(({body}) => {
-        expect(body.message).toBe("success")
-      })
+      return request(app)
+        .post("/signup")
+        .send(obj)
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.message).toBe("success");
+        });
     });
     it("should return 422, field missing", () => {
       const obj = {
@@ -160,7 +162,7 @@ describe("App", () => {
             "users validation failed. Please enter all required fields"
           );
         });
-    });    
+    });
     it("should return 400, duplicate field error", () => {
       const obj = {
         username: "user1",
@@ -199,9 +201,18 @@ describe("App", () => {
               .expect(201)
               .then(({ body }) => {
                 expect(body.result.user_id).toBe("263248919372");
-                expect(body.result).toHaveProperty("achievements", expect.any(Array));
-                expect(body.result).toHaveProperty("run_data", expect.any(Object));
-                expect(body.result).toHaveProperty("created_at", expect.any(String))
+                expect(body.result).toHaveProperty(
+                  "achievements",
+                  expect.any(Array)
+                );
+                expect(body.result).toHaveProperty(
+                  "run_data",
+                  expect.any(Object)
+                );
+                expect(body.result).toHaveProperty(
+                  "created_at",
+                  expect.any(String)
+                );
               });
           });
       });
@@ -213,7 +224,7 @@ describe("App", () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.message).toBe("You made it to the secure route");
-            const userId = body.user._id
+            const userId = body.user._id;
             return request(app)
               .get(`/runs/${userId}?secret_token=${token}`)
               .expect(200)
@@ -230,7 +241,7 @@ describe("App", () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.message).toBe("You made it to the secure route");
-            const userId = undefined
+            const userId = undefined;
             return request(app)
               .get(`/runs/${userId}?secret_token=${token}`)
               .expect(400)
@@ -250,16 +261,16 @@ describe("App", () => {
             return request(app)
               .get(`/runs/93f63ef61584ab8441b3fdd8?secret_token=${token}`)
               .expect(200)
-              .then(({body}) => {
-                expect(body.message).toBe("No runs found")
-              })
+              .then(({ body }) => {
+                expect(body.message).toBe("No runs found");
+              });
           });
       });
     });
     it("should update run", () => {
       const obj = {
         user_id: "53f63ef61584ab8441b3fdd8",
-        run_data: {"distance": 2}
+        run_data: { distance: 2 },
       };
       return loginDefaultUser().then((token) => {
         return request(app)
@@ -275,9 +286,15 @@ describe("App", () => {
               .send(obj)
               .expect(200)
               .then(({ body }) => {
-                expect(body.result).toHaveProperty("created_at", expect.any(String))
-                expect(body.result).toHaveProperty("user_id", "53f63ef61584ab8441b3fdd8")
-                expect(body.result.run_data).toHaveProperty("distance", 2)
+                expect(body.result).toHaveProperty(
+                  "created_at",
+                  expect.any(String)
+                );
+                expect(body.result).toHaveProperty(
+                  "user_id",
+                  "53f63ef61584ab8441b3fdd8"
+                );
+                expect(body.result.run_data).toHaveProperty("distance", 2);
               });
           });
       });
@@ -302,25 +319,25 @@ describe("App", () => {
       });
     });
   });
-  describe('Default api endpoint', () => {
-    it('200; returns with JSON for the api endpoints and their details', () => {
+  describe("Default api endpoint", () => {
+    it("200; returns with JSON for the api endpoints and their details", () => {
       return request(app)
-      .get("/api")
-      .expect(200)
-      .then(({ body: { endpoints } }) => {
-        expect(typeof endpoints).toBe("object")
-        expect(Object.keys(endpoints)).toHaveLength(10);
-        expect(endpoints).toHaveProperty('GET /api');
-        expect(endpoints).toHaveProperty('POST /signup');
-        expect(endpoints).toHaveProperty('POST /login');
-        expect(endpoints).toHaveProperty('GET /user');
-        expect(endpoints).toHaveProperty('PATCH /user');
-        expect(endpoints).toHaveProperty('DELETE /user/:user_id');
-        expect(endpoints).toHaveProperty('POST /runs');
-        expect(endpoints).toHaveProperty('GET /runs:user_id');
-        expect(endpoints).toHaveProperty('PATCH /runs');
-        expect(endpoints).toHaveProperty('DELETE /runs/:run_id');
-      })
+        .get("/api")
+        .expect(200)
+        .then(({ body: { endpoints } }) => {
+          expect(typeof endpoints).toBe("object");
+          expect(Object.keys(endpoints)).toHaveLength(10);
+          expect(endpoints).toHaveProperty("GET /api");
+          expect(endpoints).toHaveProperty("POST /signup");
+          expect(endpoints).toHaveProperty("POST /login");
+          expect(endpoints).toHaveProperty("GET /user");
+          expect(endpoints).toHaveProperty("PATCH /user");
+          expect(endpoints).toHaveProperty("DELETE /user/:user_id");
+          expect(endpoints).toHaveProperty("POST /runs");
+          expect(endpoints).toHaveProperty("GET /runs:user_id");
+          expect(endpoints).toHaveProperty("PATCH /runs");
+          expect(endpoints).toHaveProperty("DELETE /runs/:run_id");
+        });
     });
   });
 });
