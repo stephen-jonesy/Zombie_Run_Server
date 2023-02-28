@@ -60,7 +60,6 @@ function runsByUserId(token) {
 describe("App", () => {
   describe("Error-handling - 404 error for incorrect endpoint", () => {
     it("should return 404 error if an endpoint is misspelled", () => {
-      console.log(new Date(Date.now()));
       return request(app)
         .get("/apii")
         .expect(404)
