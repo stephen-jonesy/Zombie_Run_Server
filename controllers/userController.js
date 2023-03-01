@@ -20,19 +20,30 @@ exports.addUser = (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
-  try {
-    const updatedUser = req.body;
-    const user = await users.findById({ _id: req.body._id });
-    Object.entries(updatedUser).forEach((entry) => {
-      const [k, v] = entry;
-      if (updatedUser[k]) {
-        user[k] = updatedUser[k];
-      }
-    });
-    await user.save();
-    res.status(200).send({ user });
-  } catch (error) {
-    next(error);
+  const updatedUser = req.body;
+  if (!updatedUser.password) {
+    try {
+      const user = await users.findOneAndUpdate(
+        { _id: req.body._id },
+        req.body,
+        {
+          new: true,
+        }
+      );
+      res.status(200).send({ user });
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    try {
+      const updatedUser = req.body;
+      const user = await users.findById({ _id: req.body._id });
+      user.password = updatedUser.password;
+      await user.save();
+      res.status(200).send({ user });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 
