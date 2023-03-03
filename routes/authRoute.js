@@ -17,7 +17,6 @@ authRouter.post("/login", async (req, res, next) => {
     try {
       if (!user) {
         const error = new Error("An error occurred.");
-        console.log("in error");
         return res.status(401).send({ data: "incorrect password or email" });
       }
 

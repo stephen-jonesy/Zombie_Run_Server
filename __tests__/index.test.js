@@ -8,30 +8,30 @@ require("dotenv").config();
 
 beforeEach(async () => {
   await mongoose.connect(process.env.MONGO_URI_TEST);
-  // await users.deleteMany({});
-  // await runs.deleteMany({});
-  // await users.create({
-  //   _id: "53f63ef61584ab8441b3fdd8",
-  //   username: "user1",
-  //   email: "user1@stuff.com",
-  //   name: "user1",
-  //   password: "12345",
-  //   profile_image_url: "",
-  // });
-  // await users.create({
-  //   _id: "93f63ef61584ab8441b3fdd8",
-  //   username: "user1000",
-  //   email: "user1000@stuff.com",
-  //   name: "user1000",
-  //   password: "12345",
-  //   profile_image_url: "",
-  // });
-  // await runs.create({
-  //   user_id: "53f63ef61584ab8441b3fdd8",
-  //   run_data: { distance: 1 },
-  //   achievements: [],
-  //   created_at: new Date(Date.now()).toISOString(),
-  // });
+  await users.deleteMany({});
+  await runs.deleteMany({});
+  await users.create({
+    _id: "53f63ef61584ab8441b3fdd8",
+    username: "user1",
+    email: "user1@stuff.com",
+    name: "user1",
+    password: "1234",
+    profile_image_url: "",
+  });
+  await users.create({
+    _id: "93f63ef61584ab8441b3fdd8",
+    username: "user1000",
+    email: "user1000@stuff.com",
+    name: "user1000",
+    password: "12345",
+    profile_image_url: "",
+  });
+  await runs.create({
+    user_id: "53f63ef61584ab8441b3fdd8",
+    run_data: { distance: 1 },
+    achievements: [],
+    created_at: new Date(Date.now()).toISOString(),
+  });
 });
 
 /* Closing database connection after each test. */
@@ -44,7 +44,6 @@ function loginDefaultUser() {
     .post("/login")
     .send({ email: "user1@stuff.com", password: "1234" })
     .then(({ body: { token } }) => {
-      console.log("token", token);
       return token;
     });
 }
