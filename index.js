@@ -1,24 +1,7 @@
 const express = require("express");
-
-const path = require("path");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const {
-  findCustomers,
-  addCustomers,
-  findUsers,
-  addUser,
-} = require("./controllers/userController");
-const {
-  getRunsByUser,
-  postRun,
-  updateRun,
-  deleteRun,
-} = require("./controllers/runController");
 const passport = require("passport");
-const bodyParser = require("body-parser");
-
-const UserModel = require("./models/user");
 
 dotenv.config({ path: "./config/config.env" });
 
@@ -41,8 +24,6 @@ const {
 
 const app = express();
 app.use(express.json());
-
-app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/", apiRoute);
 app.use("/", authRoute);

@@ -1,12 +1,6 @@
 const MongoClient = require("mongodb").MongoClient;
 const users = require("../models/user");
 
-exports.findUsers = () => {
-  users.find().then((result) => {
-    console.log(result);
-  });
-};
-
 exports.addUser = (req, res, next) => {
   users
     .create(req.body)
