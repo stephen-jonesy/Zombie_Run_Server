@@ -43,7 +43,6 @@ passport.use(
       try {
         return done(null, token.user);
       } catch (error) {
-        console.log("in error");
         done(error);
       }
     }

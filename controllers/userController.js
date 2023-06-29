@@ -8,7 +8,6 @@ exports.addUser = (req, res, next) => {
       res.status(201).send({ message: "success" });
     })
     .catch((err) => {
-      // console.log(err);
       next(err);
     });
 };
